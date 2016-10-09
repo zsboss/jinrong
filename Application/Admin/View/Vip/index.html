@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<include file="Public:picUpload" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>会员费金额</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Vip/indexProcess')}" method="post" id="form1">
+	<table class="table table-bordered table-hover definewidth m10">
+		
+		<tr>
+			<td><input type="text" name="one" value="{$list.vname}" id="one">（元）</td>
+		</tr>
+		<tr>
+			<td><input type="text" name="two" value="{$list_vip.vname}" id="two">（元）</td>
+		</tr>
+		<tr>
+			<td colspan=1>
+				<button type="button" onclick="checkPassword();">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+	<script type="text/javascript" src="__TMPL__/assets/js/jquery-1.8.1.min.js"></script>
+	<script>
+		function checkPassword(){
+			var one = $("#one").val();
+			var two = $("#two").val();
+			one = one - 0;
+			two = two - 0;
+			if(two/one != 10){
+				alert("二级会员必须是一级会员的10倍");
+				return false;
+			}
+			if(!one || !two){
+				alert("值不能为空!");
+				return false;
+			}
+			$("#form1").submit();
+			
+		}
+	</script>
+</body>
+</html>

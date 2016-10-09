@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+	body {
+		padding-bottom: 40px;
+		padding: 10px 20px 20px 10px;
+	}
+	@media ( max-width : 980px) {
+		/* Enable use of floated navbar text */
+		.navbar-text.pull-right {
+			float: none;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+	}
+	</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>商品分类列表</h2>
+		</div>
+	</div>
+	<br/>
+	
+<form class="form-inline definewidth m20" action="{:U('Admin/Goods/changeStatus')}" method="POST">
+	<a href="{:U('Admin/Goods/sortAdd')}"><button type="button">添加</button></a><br/><br/>
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<th width="">分类名称</th>
+			<th style="width:100px;text-align:center;">操作</th>
+		</tr>
+		<volist name="sort" id="vo">
+		<tr>
+			<td>{$vo.name}</td>
+			<td  style="width:100px;text-align:center;">
+				<if condition="($vo['id'] neq 3) and ($vo['id'] neq 4) and ($vo['id'] neq 5)">
+				<a href="{:U('Admin/Goods/sortAdd',array('id'=>$vo['id']))}"><button type="button" >编辑</button></a>
+				<a href="javascript:vivo(0)" onclick="del({$vo.id});"><button type="button" >删除</button></a>
+				</if>
+			</td>
+		</tr>
+		</volist>
+		
+	</table>
+</form>
+<script type="text/javascript">
+//删除
+function del(id){
+	if(confirm('确定要删除!') == true){
+		window.location.href="{:U('Admin/Goods/del')}?id="+id;
+	}else{
+		return false;
+	}
+	
+}
+
+</script>
+</body>
+</html>

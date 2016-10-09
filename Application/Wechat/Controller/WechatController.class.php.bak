@@ -1,0 +1,350 @@
+<?php
+namespace Wechat\Controller;
+use Think\Controller;
+class WechatController extends Controller {
+	// 签名
+	private $token;
+	//appid
+	private $appid;
+	//appsecret
+	private $appsecret;
+	// 消息类型
+	private $msgtype;
+	// 消息内容
+	private $msgobj;
+	// 事件类型
+	private $eventtype;
+	// 事件key值
+	private $eventkey;
+	// 服务号才可得到
+	private $_isvalid;
+	
+	public function getWxAppConfig () {
+		$wxAppConfigInfo = M("wxAppConfig")->find();
+		$this->token = $wxAppConfigInfo['token'];
+		$this->appid = $wxAppConfigInfo['appid'];
+		$this->appsecret = $wxAppConfigInfo['appsecret'];
+		$this->_isvalid = $wxAppConfigInfo['isvalid'];
+	}
+	/**
+	 * 执行程序入口
+	 */
+	public function index() {
+		$this->getWxAppConfig();
+		if ($this->_isvalid == 1) {
+			$this->valid ();
+		}
+		$this->getMsg ();
+		$this->responseMsg ();
+	}
+	/**
+	 * 初次校验
+	 */
+	private function valid() {
+		$echoStr = $_GET ["echostr"];
+		if ($this->checkSignature ()) {
+			echo $echoStr;
+			exit ();
+		}
+	}
+	/**
+	 * 校验签名
+	 */
+	private function checkSignature() {
+		$signature = $_GET ["signature"];
+		$timestamp = $_GET ["timestamp"];
+		$nonce = $_GET ["nonce"];
+		$token = $this->token;
+		$tmpArr = array (
+				$token,
+				$timestamp,
+				$nonce
+		);
+		sort ( $tmpArr, SORT_STRING );
+		$tmpStr = implode ( $tmpArr );
+		$tmpStr = sha1 ( $tmpStr );
+	
+		return ($tmpStr == $signature) ? true : false;
+	}
+	/**
+	 * 获取消息
+	 */
+	private function getMsg() {
+		// 验证消息的真实性
+		if (! $this->checkSignature ()) {
+			exit ();
+		}
+		// 接收消息
+		$poststr = $GLOBALS ["HTTP_RAW_POST_DATA"];
+		if (! empty ( $poststr )) {
+			$this->msgobj = simplexml_load_string ( $poststr, 'SimpleXMLElement', LIBXML_NOCDATA );
+			$this->msgtype = strtolower ( $this->msgobj->MsgType );
+		} else {
+			$this->msgobj = null;
+		}
+	}
+	/**
+	 * 回复消息
+	 */
+	private function responseMsg() {
+		switch ($this->msgtype) {
+			case 'text' :
+				$data = $this->getData ();
+				break;
+			case 'event' :
+				$this->eventOpt ();
+				break;
+			default :
+				// code...
+				break;
+		}
+	}
+	
+	/**
+	 * 事件处理
+	 */
+	private function eventOpt() {
+		$this->eventtype = strtolower ( $this->msgobj->Event );
+		switch ($this->eventtype) {
+			case 'subscribe' :
+				// 未关注
+				// 做用户绑定处理
+				$this->isStatus(1);
+				$this->isMember (); // 添加微信会员
+				break;
+			case 'unsubscribe' :
+				// 做用户取消绑定的处理
+				break;
+			case 'SCAN' :
+				// 做用户取消绑定的处理
+				break;
+			case 'click' :
+				$this->menuClick ();
+				break;
+			default :
+				$this->ShowMember();
+				break;
+		}
+	}
+	
+	/**
+	 * 是否是微信会员信息
+	 */
+	private function isMember() {
+		$FromUserName =  $this->msgobj->FromUserName ;
+		$User = M ( 'user' ); // 实例化User对象
+		$openid = $User->where ("openid='$FromUserName'")->find ();
+		if (! $openid) {
+			// 创建用户
+			$data ['openid'] = "".$FromUserName;
+			$access_token = $this->getAccessToken();
+			$userInfo = $this->getUserInfo($access_token,$FromUserName);
+			$data['nickname'] = $userInfo['nickname'];
+			$data['city'] = $userInfo['city'];
+			$data['province'] = $userInfo['province'];
+			$data['sex'] = $userInfo['sex'];
+			$data['headimgurl'] = $userInfo['headimgurl'];/* 他是时间戳,要变成当前时间datetime  */	
+			$event = $this->msgobj->EventKey;
+			$event = "".$event;
+			$User->add ( $data );
+			$invite = M("invite");
+			if($event){
+				$this->invite_add($invite, $User,$event,$data['openid'],$userInfo['nickname']);
+			}
+			R("Home/Message/youhuiquan",array($data['openid'],"恭喜您获取一张50元购物券","升级VIP会员时可用","待使用","祝您生活愉快",$url=''));
+			
+		}
+	}
+	//二维码扫描操作
+	public function invite_add($invite,$user,$event,$openid,$nickname){
+		$active = $user->where(array('event'=>$event))->find();
+		$inviteInfo = $invite->where(array('unactive'=>$openid))->find();
+		if(empty($inviteInfo)){
+			$invite->add(array('active'=>$active['openid'],'unactive'=>$openid));
+			R("Home/Message/shangji",array($active['openid'],"您好!有好朋友通过您的二维码关注我们的微信平台了哦，快去与您的好朋友联系",$nickname,"无",date('Y-m-d H:i:s'),"祝您生活愉快",$url=''));
+			R("Home/Message/shangji",array($openid,"您好，您是通过以下会员的二维码关注我们的",$active['nickname'],"无",date('Y-m-d H:i:s'),"祝您生活愉快",$url=''));
+			
+		}
+	}
+	public function encode_json($str){
+		$code = json_encode($str);
+		return preg_replace("#\\\u([0-9a-f]+)#ie", "iconv('UCS-2', 'UTF-8', pack('H4', '\\1'))", $code);
+	}
+	public function https_post($url,$data){
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($curl, CURLOPT_POST, 1);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		$result = curl_exec($curl);
+		if (curl_errno($curl)) {
+			return 'Errno'.curl_error($curl);
+		}
+		curl_close($curl);
+		return $result;
+	}
+	
+	/**
+	 * 使用access_token接口，请求获得全局Access Token
+	 */
+	public function getAccessToken () {
+		$appid = $this->appid;
+		$appsecret = $this->appsecret;
+		$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$appsecret";
+	
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($ch);
+		curl_close($ch);
+		$jsoninfo = json_decode($output, true);
+		$access_token = $jsoninfo["access_token"];
+		return  $access_token;
+	}
+	/**
+	 * 使用全局ACCESS_TOKEN获取OpenID的详细信息
+	 */
+	public function getUserInfo ($access_token,$openid) {
+		$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=$openid";
+	
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($ch);
+		curl_close($ch);
+		$jsoninfo = json_decode($output, true);
+		return $jsoninfo;
+	}
+	/**
+	 * 显示微信会员信息
+	 */
+	public function ShowMember() {
+		$FromUserName = strtolower ( $this->msgobj->FromUserName );
+		session("name",$FromUserName);
+	}
+	/**
+	 * 自定义菜单事件处理
+	 */
+	private function menuClick() {
+		$this->eventkey = $this->msgobj->EventKey;
+		$keyValue = $this->eventkey;
+		$wxReply = M ( 'wxReply' );
+		$info = $wxReply->where ( "title='$keyValue'" )->find ();
+		if ($info) {
+			$this->responsedata ( $info ); // 接受的数据如果存在则回复相关数据
+		} else {
+			// 如果接受数据不存在则回复相关数据
+			$this->isStatus ( 2 );
+		}
+	}
+	/**
+	 * 获取回复数据并判断数据是否有对应的值
+	 */
+	private function getData() {
+		$data = $this->msgobj->Content;
+		$info = M ( 'wxReply' );
+		$info = $info->where ( "title='$data'" )->find ();
+		if ($info) {
+			$this->responsedata ( $info ); // 接受的数据如果存在则回复相关数据
+		} else {
+			// 如果接受数据不存在则回复相关数据
+			$this->isStatus ( 2 );
+		}
+	}
+	
+	/**
+	 * 判断回复前的情况
+	 *
+	 * @param unknown $i
+	 *        	0 普通回复
+	 *        	1 首次关注
+	 *        	2 没有关键字
+	 *        	3 首次关注和没有关键字
+	 *
+	 */
+	private function isStatus($i) {
+		$info = M ( 'wxReply' );
+		switch ($i) {
+			case 1 :
+				$info = $info->where ( "status=1 or status=3" )->find ();
+				break;
+			case 2 :
+				$info = $info->where ( "status=2 or status=3" )->find ();
+				break;
+			case 3 :
+				$info = $info->where ( "status=3" )->find ();
+				break;
+		}
+		$this->responsedata ( $info );
+	}
+	
+	/**
+	 * 读取要回复的数据
+	 */
+	private function responsedata($info) {
+		
+		$typeid = $info ['typeid'];
+		$id = $info ['id'];
+		if($typeid == 1){
+			//回复文本
+			$wxTextcount = M ( 'wxTextcount' );
+			$data = $wxTextcount->where("code='$id'")->find();
+		}else{
+			//回复图文
+			$wxPiccount = M ( 'wxPiccount' );
+			$data = $wxPiccount->where("code='$id'")->select();
+		}
+		$this->isResponseMsgType ( $typeid, $data );
+	}
+	/**
+	 * 判断要发送数据的类型并发送
+	 */
+	private function isResponseMsgType($id, $data) {
+		switch ($id) {
+			case 1 :
+				$this->textMsg ( $data['content'] );
+				break;
+			case 2 :
+				$this->newsMsg ( $data );
+				break;
+		}
+	}
+	
+	/**
+	 * 回复文本消息
+	 */
+	private function textMsg($content = '') {
+		$textxml = "<xml><ToUserName><![CDATA[{$this->msgobj->FromUserName}]]></ToUserName><FromUserName><![CDATA[{$this->msgobj->ToUserName}]]></FromUserName><CreateTime>" . time () . "</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>";
+	
+		// 做搜索处理
+		if (empty ( $content )) {
+			$content = "查询功能正在开发中...";
+		}
+		$resultstr = sprintf ( $textxml, $content );
+		echo $resultstr;
+	}
+	/**
+	 * 回复图文消息
+	 */
+	private function newsMsg($data) {
+		if (! is_array ( $data )) {
+			exit ();
+		}
+		$newscount = (count ( $data ) > 10) ? 10 : count ( $data );
+		$newsxml = "<xml><ToUserName><![CDATA[{$this->msgobj->FromUserName}]]></ToUserName><FromUserName><![CDATA[{$this->msgobj->ToUserName}]]></FromUserName><CreateTime>" . time () . "</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>{$newscount}</ArticleCount><Articles>%s</Articles></xml>";
+		$itemxml = "";
+		foreach ( $data as $key => $value ) {
+			$itemxml .= "<item>";
+			$itemxml .= "<Title><![CDATA[{$value['title']}]]></Title><Description><![CDATA[{$value['summary']}]]></Description><PicUrl><![CDATA[{$value['picurl']}]]></PicUrl><Url><![CDATA[{$value['url']}/openid/{$this->msgobj->FromUserName}]]></Url>";
+			$itemxml .= "</item>";
+		}
+		$resultstr = sprintf ( $newsxml, $itemxml );
+		echo $resultstr;
+	}
+}

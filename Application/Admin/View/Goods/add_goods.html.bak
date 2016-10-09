@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<include file="./Application/Admin/View/Public/top.html" />
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<!-- 文本编辑器 -->
+	<load href="__PUBLIC__/ueditor/ueditor.config.js" />
+	<load href="__PUBLIC__/ueditor/ueditor.all.min.js" />
+	<script type="text/javascript"  src="__PUBLIC__/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="__TMPL__/js/jquery.wallform.js"></script>
+	<load href="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js" />
+	<!-- 文本编辑器 end -->
+    <script type="text/javascript" language="javascript">
+        $(function() {
+            $('#fileUp').change(function() {
+                //$('#uploadLog2').html('开始上传中....');
+				document.formname.action="{:U('Admin/Goods/uploadProcess')}";
+                $('#formFile').submit();
+				document.formname.action= "";
+				var html = $('#image').html();
+				var app = '';
+				app = '<div  class="pic"  style="position:relative;float:left;"><img src="__TMPL__/images/img.gif"  style="width:80px;height:80px;"></div>';
+				('#image').html(app);
+            });
+        });
+        function stopSend(){
+			var goodid = $('#goodsid').val();
+			$("#image").load("{:U('Admin/Goods/images')}?good_id="+goodid);
+		}
+    </script>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2><if condition="$goods">编辑<else/>添加</if></h2>
+		</div>
+	</div>
+	<br/>
+	<form action=""  method="post" id="formFile" name="formname" enctype="multipart/form-data" target='frameFile' >
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">商品名称</td>
+			<td><input type="text" name="name" id="name" value="{$goods.name}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">商品分类</td>
+			<td>
+				<select name="sortid" id="sortid">
+					<option value=0>选择商品分类</option>
+					<foreach name="sort" item="vo">
+						<option value="{$vo.id}" <if condition="$vo['id'] eq $goods['sortid']"> selected</if>>{$vo.name}</option>
+					</foreach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">图片显示</td>
+			<td>
+					<div id="image">
+						
+					</div>
+					
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">上传图片</td>
+			<td>
+					<button type="button" onclick="fileSelect();">上传图片</button>
+						<input type='file' id='fileUp' name='fileUp'  style="display:none;"/>
+						<div id='uploadLog'>
+						</div>
+						<br />
+					<iframe id='frameFile' name='frameFile' style="display:none;">
+					</iframe>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">原价</td>
+			<td><input type="text" name="price"  id="price" value="{$goods.saleprice}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">现价</td>
+			<td><input type="text" name="saleprice"  id="saleprice" value="{$goods.saleprice}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">商品库存</td>
+			<td><input type="text" name="count"  id="count" value="{$goods.count}"></td>
+		</tr>
+		<tr>
+			<td>
+				拍品简介
+			</td>
+			<td>
+				<script type="text/plain" id="introduction" name="introduction"></script>
+					<script type="text/javascript">
+						$(function() {
+							var editor;
+							//具体参数配置在  editor_config.js  中
+							var options = {
+								initialFrameWidth : 900, //初化宽度
+								initialFrameHeight : 200, //初化高度
+								focus : false, //初始化时，是否让编辑器获得焦点true或false
+								maximumWords : 100000, //允许的最大字符数
+							};
+							editor = new UE.ui.Editor(options);
+							editor.render("introduction");
+							editor.ready(function() {
+							editor.setContent('{$goods.introduction}'); //加载数据库Action.class.PHP传过来的值
+							});
+						});
+					</script>
+			</td>
+			
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type="hidden"  value="{$goods.id}" name="id" id="goodsid">
+				<input type="button" onclick="keep();"  value="保存">
+			</td>	
+		</tr>
+	</table>
+	</form>
+<script>
+function fileSelect() {
+    document.getElementById("fileUp").click(); 
+}
+function dele(id){
+	var goodid = $('#goodsid').val();
+	if(confirm('是否确认删除?')){
+		$.ajax({
+			url:"{:U('Admin/Goods/dele')}",
+			type:'POST',
+			data:'id='+ id,
+			dataType:'json',
+			success:function(re){
+	            if(re.status == 1)
+	            {
+	           		alert('删除成功!');	
+					$("#image").load("{:U('Admin/Goods/images')}?good_id="+goodid);
+	            }else{
+					alert('删除失败!');
+				}
+			}
+		});	
+	}
+	
+}
+//页面加载完触发
+ $(document).ready(function(){
+  var goodid = $('#goodsid').val();
+  $("#image").load("{:U('Admin/Goods/images')}?good_id="+goodid);
+});
+//保存并发布
+function keep(){
+	var name=document.getElementById('name').value;
+	var content=document.getElementById('introduction').value;
+	var saleprice=document.getElementById('saleprice').value;
+	var price=document.getElementById('price').value;
+	var sortid=document.getElementById('sortid').value;
+	if(sortid == 0){
+		alert('请添加商品分类!');
+		return false;
+	}
+	if(name == ''){
+		alert('名称不能为空!');
+		return false;
+	}
+	if(content == ''){
+		alert('请对拍品进行描述!');
+		return false;
+	}
+	if(isNaN(price)){
+		alert('原价请输入数字');
+		return false;
+	}
+	if(isNaN(saleprice)){
+		alert('售价请输入数字');
+		return false;
+	}
+	if(price == '' || price <=0){
+		alert('请填写商品品价格!');
+		return false;
+	}
+	if(saleprice == '' || saleprice <=0){
+		alert('请填写商品品价格!');
+		return false;
+	}
+	 $.ajax({  
+        type: "post",  
+		url: "{:U('Admin/Goods/keep')}",  
+		data: $("#formFile").serialize(),  
+		success: function (result) {
+			if(result.status == 1){
+				alert('添加成功!');
+				window.location.href="{:U('Admin/Goods/index')}";
+			}else if(result.status == 3){
+				alert('请添加图片!');
+			}else{
+				alert('添加失败,请刷新后重试!');	
+			}
+            }  
+        });  
+		return false;
+}
+</script>
+</body>
+</html>

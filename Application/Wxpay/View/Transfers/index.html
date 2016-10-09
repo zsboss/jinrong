@@ -1,0 +1,29 @@
+<html>
+<head>
+<style>
+.div{
+	margin:0 auto;
+	font-size:48px;
+	padding:0 auto;
+}
+p{
+	margin:0 auto;
+	font-size:48px;
+	padding:0 auto;
+}
+</style>
+</head>
+<body>
+<div class="div" id="div">
+<p>
+	<if condition="$res eq 1">
+		提款成功!;
+	<elseif condition="$res eq 4"/>
+		提现太频繁，请稍候再试
+	<elseif condition="$res eq 5"/>
+		商户账户余额不足，请联系平台!
+	</if>
+</p>
+</div>
+</body>
+</html>

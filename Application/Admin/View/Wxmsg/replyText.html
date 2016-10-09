@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>关键字回复列表</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Wxmsg/saveReplyText')}" method="post">
+	<input type="hidden" name="id" value="{$textInfo['id']}">
+	<input type="hidden" name="code" value="{$code}">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<th>
+				<textarea name="content" style="width:260px;height:180px;">
+				{$textInfo['content']}
+				</textarea>
+			</th>
+		</tr>
+		<tr>
+			<td>
+				<button type="button" onclick="history.go(-1)">返回</button>
+				<button type="submit">保存</button>	
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

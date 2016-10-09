@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/main-min.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>编辑关键字</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Wxmsg/editProcess')}" method="post">
+	<input type="hidden" name="id" value="{$reply['id']}">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">关键字</td>
+			<td><input type="text" name="title" value="{$reply['title']}"></td>
+		</tr>
+		<tr>
+			<td>回复时机</td>
+			<td>
+				<select name="status">
+					<option value="4" <if condition="$reply['status'] == 4">selected</if>>匹配时回复</option>
+					<option value="1" <if condition="$reply['status'] == 1">selected</if>>首次关注时回复</option>
+					<option value="2" <if condition="$reply['status'] == 2">selected</if>>无法识别关键字时回复</option>	
+					<option value="3" <if condition="$reply['status'] == 3">selected</if>>首次关注和无法识别关键字时回复</option>	
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>消息类型</td>
+			<td>
+				<select name="typeid">
+					<option value="1" <if condition="$reply['typeid'] == 1">selected</if>>文本消息</option>
+					<option value="2" <if condition="$reply['typeid'] == 2">selected</if>>图文消息</option>
+				</select>
+			</td>	
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<button type="submit">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

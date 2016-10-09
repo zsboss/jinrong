@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<include file="./Application/Admin/View/Public/top.html" />
+<style>
+.dd1{width:94%; background-color:#fff; border-bottom:#eee 1px dashed; padding:10px 3%;height:60px;}
+.dd1 img{width:50px;height:50px; float:left; margin-right:10px;}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>订单详情</h2>
+		</div>
+	</div>
+	<br/>
+
+	<table class="table table-bordered table-hover definewidth m10">
+				<thead>
+					<!-- <tr> <th colspan="2" style="background-color:#8EE5EE;font-size:16px;text-align:center;color:#EE7600;">订单信息</th> </tr> -->
+					<tr>
+						<th colspan="3" style="border:none;border-right:1px solid #ccc;">订单信息</th>
+						<th colspan="3" style="border:none;">订单状态</th>						
+					</tr>										
+				</thead>
+					<tr>
+						<td  colspan="3" style="border:none;border-right:1px solid #ccc;">订单编号 : {$order.title}</td>
+						<if condition="$order['status'] eq 1">
+						<td colspan="3" style="border:none;">商品已拍下，等待买家付款</td>
+						<elseif condition="$order['status'] eq 2"/>
+							<td colspan="3" style="border:none;">买家已付款，等待卖家发货</td>
+						<elseif condition="$order['status'] eq 3"/>
+							<td colspan="3" style="border:none;">卖家已发货，等待买家确认收货</td>
+						<elseif condition="$order['status'] eq 4"/>
+							<td colspan="3" style="border:none;">买家已收货,订单已完成</td>
+						</if>
+					</tr>
+
+					<tr>
+						<td  colspan="3"style="border:none;border-right:1px solid #ccc;">收货人姓名 : {$order.name}</td>							
+					</tr>
+					<tr>
+						<td  colspan="3"style="border:none;border-right:1px solid #ccc;">收货电话 :{$order.tel}</td>
+					</tr>
+					<tr>
+						<td  colspan="3"style="border:none;border-right:1px solid #ccc;">收货地址 :{$order.address}</td>
+					</tr>
+					<tr>
+						<td  colspan="3"style="border:none;border-right:1px solid #ccc;">付款方式 :
+							<if condition="$order['payment'] eq 1">
+								微信支付
+							<elseif condition="$order['payment'] eq 2"/>
+								佣金支付
+							</if>
+						</td>
+					</tr>
+					<tr>
+						<td  colspan="3"style="border:none;border-right:1px solid #ccc;">订单总价 :
+							{$order.price}<if condition="!empty($order['postMoney'])">+邮费:{$order.postMoney}</if>
+						</td>
+					</tr>
+			</table>
+<foreach name="order_content" item="vo">
+	<div class="dd1">
+		<img src="__ROOT__/{$vo.image}" />
+		<div class="product">
+			<span>{$vo.goods_name}</span>
+			&nbsp;&nbsp;X&nbsp;&nbsp;{$vo.number}
+		</div>
+		<div class="price">￥&nbsp;&nbsp;{$vo.price}</div>
+	</div>
+</foreach>
+</form>
+</body>
+</html>

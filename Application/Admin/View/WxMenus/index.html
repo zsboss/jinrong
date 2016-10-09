@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+.menus li {
+	width:100%;
+	border-bottom:1px dashed #ccc;
+	text-align:center;
+	height:40px;
+	line-height:40px;
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>自定义菜单</h2>
+		</div>
+	</div>
+	<br/>
+	<table class="table table-bordered table-hover definewidth m10">
+		
+		<tr>
+			<td style="width:40%">子菜单</td>
+			<td style="width:20%">
+				<ul class="menus">
+					<volist name="menus1" id="vo">
+						<li>{$vo.name}
+						[<if condition="$vo['open'] == 1">已开启<else />已关闭</if>] [<a href="{:U('Admin/WxMenus/editSubmenu',array('id'=>$vo['id']))}">编辑</a>]
+						</li>
+					</volist>
+				</ul>
+			</td>
+			<td style="width:20%">
+				<ul class="menus">
+					<volist name="menus2" id="vo">
+						<li>{$vo.name}
+						[<if condition="$vo['open'] == 1">已开启<else />已关闭</if>] [<a href="{:U('Admin/WxMenus/editSubmenu',array('id'=>$vo['id']))}">编辑</a>]
+						</li>
+					</volist>
+				</ul>
+			</td>
+			<td style="width:20%">
+				<ul class="menus">
+					<volist name="menus3" id="vo">
+						<li>{$vo.name}
+						[<if condition="$vo['open'] == 1">已开启<else />已关闭</if>] [<a href="{:U('Admin/WxMenus/editSubmenu',array('id'=>$vo['id']))}">编辑</a>]
+						</li>
+					</volist>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>底部菜单</td>
+			<td style="text-align:center;">{$bottomMenu1} [<a href="{:U('Admin/WxMenus/editMenu',array('id'=>1))}">编辑</a>]</td>
+			<td style="text-align:center;">{$bottomMenu2} [<a href="{:U('Admin/WxMenus/editMenu',array('id'=>2))}">编辑</a>]</td>
+			<td style="text-align:center;">{$bottomMenu3} [<a href="{:U('Admin/WxMenus/editMenu',array('id'=>3))}">编辑</a>]</td>
+		</tr>
+		<tr>
+			<td colspan="4"><button type="button" onclick="{if(confirm('确定要生成自定义菜单吗?')){location.href='__URL__/createMenus';return true;}return false;}">生成菜单</button></td>
+		</tr>
+	</table>
+</body>
+</html>

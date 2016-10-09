@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<include file="./Application/Admin/View/Public/top.html" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2><if condition="!empty($release['id'])">编辑商品分类<else/>添加商品分类</if></h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Goods/sortProcess')}" method="post" id="form1">
+	<input type="hidden" name="id" value="{$sort.id}">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">分类名称</td>
+			<td><input type="text" name="name" id="name" value="{$sort.name}"></td>
+		</tr>
+		
+			<td colspan='2'>
+				<button type="button" onclick="checkPassword();" >提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+	<script type="text/javascript" src="__TMPL__/assets/js/jquery-1.8.1.min.js"></script>
+	<script>
+		function checkPassword () {
+			var name = $("#name").val();
+			if(!name){
+				alert("分类名称不能为空!");
+				return false;
+			}
+			
+			$("#form1").submit();
+			
+		}
+	</script>
+</body>
+</html>

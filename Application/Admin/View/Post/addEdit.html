@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<include file="./Application/Admin/View/Public/top.html" />
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2><if condition="$list">编辑<else/>添加</if></h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Post/saveProcess')}"  method="post" id="formFile"  >
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">省份名称</td>
+			<td><input type="text" name="province" id="province" value="{$list.province}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">价格</td>
+			<td><input type="text" name="money"  id="money" value="{$list.money}"></td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type="hidden"  value="{$list.id}" name="id" id="goodsid">
+				<input type="button" onclick="keep();"  value="保存">
+			</td>	
+		</tr>
+	</table>
+	</form>
+<script>
+//保存并发布
+function keep(){
+	var province=document.getElementById('province').value;
+	var money=document.getElementById('money').value;
+	if(province == ''){
+		alert('省份不能为空!');
+		return false;
+	}
+	if(isNaN(money)){
+		alert('价格请输入数字');
+		return false;
+	}
+	if(money == '' || money <=0){
+		alert('请填写价格!');
+		return false;
+	}
+	document.getElementById('formFile').submit();
+}
+</script>
+</body>
+</html>

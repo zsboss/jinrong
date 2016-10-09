@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="__TMPL__/js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="__TMPL__/js/jquery-2.0.3.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>返佣列表</h2>
+		</div>
+	</div>
+	<br/>
+	<form  action="{:U('Admin/User/rebate')}" method="POST">
+	用户昵称: &nbsp;&nbsp;<input type="text" name="name" > &nbsp;&nbsp;支付时间: &nbsp;&nbsp;<input type="text" name="paytime_sta" id="paytime_sta"> - <input type="text" name="paytime_end" id="paytime_end">&nbsp;&nbsp;
+
+	<input type="submit" value="搜索" >
+</form>
+<br/>
+<form class="form-inline definewidth m20" action="{:U('Admin/Goods/changeStatus')}" method="POST">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<th width="">订单编号</th>
+			<th width="">用户昵称</th>
+			<th width="">返佣类型</th>
+			<th width="">申请时间</th>
+		</tr>
+		<volist name="list" id="vo">
+		<tr>
+			<td>{$vo.id}</td>
+			<td>{$vo.name}</td>
+			<td>
+				<if condition="$vo['status'] eq 1">
+					推广提成
+				<elseif condition="$vo['status'] eq 2"/>
+					销售提成
+				<elseif condition="$vo['status'] eq 3"/>
+					业绩突出奖
+				<elseif condition="$vo['status'] eq 4"/>
+					业绩分红
+				<elseif condition="$vo['status'] eq 5"/>
+					特别奖励
+				
+				</if>
+				
+			</td>
+			<td>{$vo.time}</td>
+		</tr>
+		</volist>
+		<tr>
+			<td colspan="12" style="text-align:right;">{$page}</td>
+		</tr>
+	</table>
+</form>
+<script>
+	 //付款时间
+	$('#paytime_sta').bind('click',function(){
+    	WdatePicker({dateFmt:'yyyy-MM-dd'});
+	});
+	$('#paytime_end').bind('click',function(){
+    	WdatePicker({dateFmt:'yyyy-MM-dd'});
+	})
+	function agree(id,money){
+		if(confirm('确认同意提现!')){
+			window.location.href="{:U('Wxpay/Transfers/index')}?id="+id+"&money="+money;
+		}
+	}
+	function unagree(id){
+		if(confirm('不同意提现!')){
+			window.location.href="{:U('Admin/User/tiixan')}?id="+id;
+		}
+	}
+</script>
+</body>
+</html>

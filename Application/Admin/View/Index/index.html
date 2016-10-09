@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <title>标准后台</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+  <link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+   <link href="__TMPL__/assets/css/main-min.css" rel="stylesheet" type="text/css" />
+ </head>
+ <body>
+  <div class="header">
+      <div class="dl-title">
+        <a href="#" title="文档库地址" target="_blank">
+          <span class="lp-title-port">BUI</span><span class="dl-title-text">前端框架</span>
+        </a>
+      </div>
+
+    <div class="dl-log">欢迎您，<span class="dl-log-user">{$username}</span><a href="{:U('Admin/Login/loginOut')}" title="退出系统" class="dl-log-quit">[退出]</a>
+    </div>
+  </div>
+   <div class="content">
+    <div class="dl-main-nav">
+      <ul id="J_Nav"  class="nav-list ks-clear">
+        <li class="nav-item"><div class="nav-item-inner nav-order">系统管理</div></li>
+        <li class="nav-item"><div class="nav-item-inner nav-inventory">内容管理</div></li>
+        <li class="nav-item"><div class="nav-item-inner nav-inventory">商品管理</div></li>
+        <li class="nav-item"><div class="nav-item-inner nav-inventory">订单管理</div></li>
+        <li class="nav-item"><div class="nav-item-inner nav-supplier">微信管理</div></li>
+      </ul>
+    </div>
+    <ul id="J_NavContent" class="dl-tab-conten">
+
+    </ul>
+   </div>
+  <script type="text/javascript" src="__TMPL__/assets/js/jquery-1.8.1.min.js"></script>
+  <script type="text/javascript" src="__TMPL__/assets/js/bui.js"></script>
+  <script type="text/javascript" src="__TMPL__/assets/js/config.js"></script>
+
+  <script>
+    BUI.use('common/main',function(){
+      var config = [{
+            id:'1',
+            homePage : '1',
+            menu:[{
+                text:'系统管理',
+                items:[
+                  {id:'1',text:'修改密码',href:'{:U("Admin/Index/changePassword")}'}
+                ]
+              },{
+              text:'分销参数设置',
+              items:[
+				  //{id:'1',text:'会员费金额',href:'{:U("Admin/Vip/index")}'},
+				  //{id:'2',text:'会员升级',href:'{:U("Admin/Vip/vip_one")}'},
+                {id:'3',text:'分销佣金',href:'{:U("Admin/System/index")}'},
+//                {id:'4',text:'会员购买折扣',href:'{:U("Admin/System/discount")}'},
+//                {id:'5',text:'会员提现最低值',href:'{:U("Admin/System/cash")}'},
+//                {id:'6',text:'销售提成及培育奖',href:'{:U("Admin/System/foster")}'}
+              ]
+            }]
+          },{
+            id:'2',
+            homePage : '1',
+            menu:[{
+                text:'用户管理',
+                items:[
+                  {id:'1',text:'游客列表',href:'{:U("Admin/User/index")}'},
+                  {id:'2',text:'推广代理商列表',href:'{:U("Admin/User/index2")}'},
+                  {id:'3',text:'VIP会员列表',href:'{:U("Admin/User/index3")}'},
+                  {id:'4',text:'白金会员列表',href:'{:U("Admin/User/index4")}'},
+				  {id:'5',text:'用户提现',href:'{:U("Admin/User/user_reflect_list")}'}
+                ]
+              },{
+                text:'邮费管理',
+                items:[
+                  {id:'1',text:'邮费列表',href:'{:U("Admin/Post/index")}'}
+                ]
+              }]
+          },{
+              id:'4',
+              homePage : '1',
+              menu:[{
+                  text:'商品管理',
+                  items:[
+                    {id:'1',text:'商品列表',href:'{:U("Admin/Goods/index")}'}
+                  ]
+                },{
+                  text:'商品分类管理',
+                  items:[
+                    {id:'2',text:'分类列表',href:'{:U("Admin/Goods/sort")}'}
+                  ]
+                }]
+            },{
+                id:'5',
+                homePage : '1',
+                menu:[{
+                    text:'订单管理',
+                    items:[
+                      {id:'1',text:'商品订单列表',href:'{:U("Admin/Order/index")}'},
+                      {id:'3',text:'会员提现订单列表',href:'{:U("Admin/User/user_reflect")}'},
+                      {id:'4',text:'会员提现列表',href:'{:U("Admin/User/user_reflect_list")}'},
+                      {id:'5',text:'返佣记录',href:'{:U("Admin/Order/rebate")}'}
+                    ]
+                  }]
+              },{
+            id:'6',
+            homePage : '1',
+            menu:[{
+                text:'详情页面',
+                items:[
+                  {id:'1',text:'自动回复',href:'{:U("Admin/Wxmsg/index")}'},
+                  {id:'2',text:'自定义菜单',href:'{:U("Admin/WxMenus/index")}'},
+                  {id:'3',text:'微信配置',href:'{:U("Admin/WxAppConfig/index")}'}
+                ]
+              }]
+          }];
+      new PageUtil.MainPage({
+        modulesConfig : config
+      });
+    });
+  </script>
+ </body>
+</html>

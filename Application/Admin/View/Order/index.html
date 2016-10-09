@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="__TMPL__/js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="__TMPL__/js/jquery-2.0.3.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>订单列表</h2>
+		</div>
+	</div>
+	<br/>
+	<form  action="{:U('Admin/Order/index')}" method="POST">
+	订单号: &nbsp;&nbsp;<input type="text" name="title" > &nbsp;&nbsp;支付时间: &nbsp;&nbsp;<input type="text" name="paytime_sta" id="paytime_sta"> - <input type="text" name="paytime_end" id="paytime_end">&nbsp;&nbsp;收货人姓名: &nbsp;&nbsp;<input type="text" name="name" >&nbsp;&nbsp;<br/><br/>收货人电话: &nbsp;&nbsp;<input type="text" name="tel" >&nbsp;&nbsp;
+
+	<select name="status">
+		<option value="0">订单状态</option>
+		<option value="2">待发货</option>
+		<option value="3">待收货</option>
+		<option value="4">已完成</option>
+	</select>
+	<select name="payment">
+		<option  value="0">付款方式</option>
+		<option value="1">微信支付</option>
+		<option value="2">佣金支付</option>
+	</select>
+	<input type="submit" value="搜索" >
+</form>
+<br/>
+<form class="form-inline definewidth m20" action="{:U('Admin/Goods/changeStatus')}" method="POST">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<th width="">订单编号</th>
+			<th width="">订单类型</th>
+			<th width="">订单价格</th>
+			<th width="">收货人姓名</th>
+			<th width="">收货人电话</th>
+			<th width="">收货人地址</th>
+			<th width="">支付时间</th>
+			<th width="">支付方式</th>
+			<th width="">订单状态</th>
+			<th style="width:100px;text-align:center;">操作</th>
+		</tr>
+		<volist name="list" id="vo">
+		<tr>
+			<td>{$vo.title}</td>
+			<td>
+				<if condition="$vo['vipid'] eq 0">
+					普通订单
+				<elseif condition="$vo['vipid'] eq 1"/>
+					代理商资格订单
+				<elseif condition="$vo['vipid'] eq 2"/>
+					VIP资格订单
+				<elseif condition="$vo['vipid'] eq 3"/>
+					购买白金会员订单
+				</if>
+			</td>
+			<td>{$vo.price}</td>
+			<td>{$vo.name}</td>
+			<td>{$vo.tel}</td>
+			<td>{$vo.address}</td>
+			<td>{$vo.paytime}</td>
+			<if condition="$vo['payment'] eq 1">
+			<td>微信支付</td>
+			<elseif condition="$vo['payment'] eq 2"/>
+			<td>佣金支付</td>
+			</if>
+			<if condition="$vo['status'] eq 1">
+				<td>未付款</td>
+			<elseif condition="$vo['status'] eq 2"/>
+				<td>待发货</td>
+			<elseif condition="$vo['status'] eq 3"/>
+				<td>待收货</td>
+			<elseif condition="$vo['status'] eq 4"/>
+				<td>已完成</td>
+			<elseif condition="$vo['status'] eq 5"/>
+				<td>退款</td>
+			</if>
+			<td  style="width:100px;text-align:center;">
+				<if condition="$vo['status'] eq 2">
+					<button type="button" onclick="fahuo({$vo.id});">发货</button><br/>
+				</if>
+				
+				<a href="{:U('Admin/Order/orderCon',array('id'=>$vo['id']))}"><button type="button" >查看详情</button></a></td>
+		</tr>
+		</volist>
+		<tr>
+			<td colspan="12" style="text-align:right;">{$page}</td>
+		</tr>
+	</table>
+</form>
+<script>
+	 //付款时间w
+	$('#paytime_sta').bind('click',function(){
+    	WdatePicker({dateFmt:'yyyy-MM-dd'});
+	});
+	$('#paytime_end').bind('click',function(){
+    	WdatePicker({dateFmt:'yyyy-MM-dd'});
+	})
+function fahuo(id){
+	if(confirm('是否发货!')){
+		window.location.href="{:U('Admin/Order/fahuo')}?id="+id;
+	}
+}
+</script>
+</body>
+</html>

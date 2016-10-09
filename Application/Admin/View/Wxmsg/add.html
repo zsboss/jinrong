@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/main-min.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>新增关键字</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Wxmsg/addProcess')}" method="post">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">关键字</td>
+			<td><input type="text" name="title"></td>
+		</tr>
+		<tr>
+			<td>回复时机</td>
+			<td>
+				<select name="status">
+					<option value="4">匹配时回复</option>
+					<option value="1">首次关注时回复</option>
+					<option value="2">无法识别关键字时回复</option>	
+					<option value="3">首次关注和无法识别关键字时回复</option>	
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>消息类型</td>
+			<td>
+				<select name="typeid">
+					<option value="1">文本消息</option>
+					<option value="2">图文消息</option>
+				</select>
+			</td>	
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<button type="submit">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

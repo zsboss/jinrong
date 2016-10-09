@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="__TMPL__/js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="__TMPL__/js/jquery-2.0.3.min.js"></script>
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>订单列表</h2>
+		</div>
+	</div>
+	<br/>
+<form  action="{:U('Admin/Order/goods')}" method="POST" name="formname">
+	支付时间: &nbsp;&nbsp;<input type="text" name="paytime_sta" id="paytime_sta"> - <input type="text" name="paytime_end" id="paytime_end">&nbsp;&nbsp;
+		小区: 
+			<select name="villageid">
+				<option value="">请选择小区</option>
+				<foreach name="village" item="vo">
+					<option value="{$vo.id}">{$vo.name}</option>
+				</foreach>
+			</select>&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="submit" value="搜索" >
+	<input type="hidden" value="{$manp}" name="manp">	
+	<input type="submit" value="导出" onclick="daochu()">
+<br/>	
+<br/>
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<th width="">小区名称</th>
+			<th width="">商品名称</th>
+			<th width="">商品单价</th>
+			<th width="">商品数量</th>
+			<th width="">商品总价</th>
+			
+		</tr>
+		<volist name="goods" id="vo">
+		<tr>
+			<td>{$vo.village_name}</td>
+			<td>{$vo.goods_name}</td>
+			<td>{$vo.price}</td>
+			<td>{$vo.number}</td>
+			<td>{$vo.total}</td>
+		</tr>
+		</volist>
+		<if condition="!empty($goods)">
+			<tr>
+			<td>总计</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>{$total}</td>
+		</tr>
+		</if>
+		
+		<tr>
+			<td colspan="5" style="text-align:right;">{$page}</td>
+		</tr>
+	</table>
+</form>
+<script>
+	 //付款时间
+	$('#paytime_sta').bind('click',function(){
+    	WdatePicker({dateFmt:'yyyy-MM-dd'});
+	});
+	$('#paytime_end').bind('click',function(){
+    	WdatePicker({dateFmt:'yyyy-MM-dd'});
+	})
+	function daochu(){
+		document.formname.action="{:U('Admin/Order/excel')}";	
+	}
+    	
+</script>
+</body>
+</html>

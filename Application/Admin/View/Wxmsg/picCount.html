@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+	<!--上传图片引入文件  -->
+		<script src="__TMPL__/plugins/jquery-1.8.3.min.js"></script>
+		<script src="__TMPL__/plugins/uploadify/jquery.uploadify.js"></script>
+		<link rel="stylesheet" type="text/css" href="__TMPL__/plugins/uploadify/uploadify.css" />
+		<script src="__TMPL__/plugins/msgbox/jquery.msgbox.min.js"></script>
+		<script src="__TMPL__/plugins/url/url.min.js"></script>
+	<!--上传图片引入文件end  -->
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<include file="Public:picUpload" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>新增回复内容</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Wxmsg/savePiccount')}" method="post">
+	<input type="hidden" name="id" value="{$list.id}">
+	<input type="hidden" name="code" value={$code}>
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">标题</td>
+			<td><input type="text" name="title" value="{$list.title}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">描述</td>
+			<td><input type="text" name="summary" value="{$list.summary}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">链接地址</td>
+			<td><input type="text" name="url" value="{$list.url}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">图片地址</td>
+			<td>
+				<if condition="$list['picurl']"><img name='picurl' src="{$list.picurl}" style="width:150px;height:200px;" /></if>
+					<div id="image" class="image"></div>
+					<input type="file" name="file_upload" id="file_upload" />
+					<a href="javascript:$('#file_upload').uploadify('upload','');" data-ke-src="javascript:$('#file_upload').uploadify('upload','');">
+						上传
+					</a>
+					<br/>
+					<h5 style="color:red;">尺寸：640*550&nbsp;&nbsp;&nbsp;大小：小于200kb</h5>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<button type="submit">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

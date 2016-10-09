@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>系统后台</title>
+        <link rel="stylesheet" type="text/css" href="__TMPL__/Css/login.css" media="all">
+       	<link rel="stylesheet" type="text/css" href="__TMPL__/Css/default_color.css" media="all">
+    </head>
+    <body id="login-page">
+        <div id="main-content">
+
+            <!-- 主体 -->
+            <div class="login-body">
+                <div class="login-main pr">
+                    <form action="{:U('Admin/Login/loginCheck')}" method="post" class="login-form">
+                        <h3 class="welcome"><i class="login-logo"></i>系统管理平台</h3>
+                        <div id="itemBox" class="item-box">
+                            <div class="item">
+                                <i class="icon-login-user"></i>
+                                <input type="text" name="username" id="username" placeholder="请填写用户名" autocomplete="off" />
+                            </div>
+                            <div class="item b0">
+                                <i class="icon-login-pwd"></i>
+                                <input type="password" name="password" id="password" placeholder="请填写密码" autocomplete="off" />
+                            </div>
+                            <div class="item verifycode">
+                                <i class="icon-login-verifycode"></i>
+                                <input type="text" name="verify" id="verify" placeholder="请填写验证码" autocomplete="off">
+                                <a class="reloadverify" title="换一张" href="javascript:void(0)">换一张？</a>
+                            </div>
+                            <div>
+                                <img class="verifyimg reloadverify" alt="点击切换" src="{:U('Admin/Login/verify')}">
+                            </div>
+                        </div>
+                        <div class="login_btn_panel">
+                            <button class="login-btn" type="submit">
+                                <span class="in"><i class="icon-loading"></i>登 录 中 ...</span>
+                                <span class="on">登 录</span>
+                            </button>
+                            <div class="check-tips"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+	<!--[if lt IE 9]>
+    <script type="text/javascript" src="__TMPL__/Js/jquery-1.10.2.min.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="__TMPL__/Js/jquery-2.0.3.min.js"></script>
+    <!--<![endif]-->
+    <script type="text/javascript">
+    	/* 登陆表单获取焦点变色 */
+    	$(".login-form").on("focus", "input", function(){
+            $(this).closest('.item').addClass('focus');
+        }).on("blur","input",function(){
+            $(this).closest('.item').removeClass('focus');
+        });
+
+    	//表单提交
+    	$(document)
+	    	.ajaxStart(function(){
+	    		$("button:submit").addClass("log-in").attr("disabled", true);
+	    	})
+	    	.ajaxStop(function(){
+	    		$("button:submit").removeClass("log-in").attr("disabled", false);
+	    	});
+
+    	$("form").submit(function(){
+    		
+    		var self = $(this);
+    		
+    		var name = $("#username").val();
+    		var password = $("#password").val();
+    		var verify = $("#verify").val();
+    		if(!name){
+    			alert("请输入用户名！");
+    			return false;
+    		}
+    		if(!password){
+    			alert("请输入密码！");
+    			return false;
+    		}
+    		//if(!verify){
+    		//	alert("请输入验证码！");
+    		//	return false;
+    		//}   
+		});
+    	$(function(){
+			//初始化选中用户名输入框
+			$("#itemBox").find("input[name=username]").focus();
+			//刷新验证码
+			var verifyimg = $(".verifyimg").attr("src");
+            $(".reloadverify").click(function(){
+                if( verifyimg.indexOf('?')>0){
+                    $(".verifyimg").attr("src", verifyimg+'&random='+Math.random());
+                }else{
+                    $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
+                }
+            });
+		});
+    </script>
+</body>
+</html>

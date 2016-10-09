@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<include file="./Application/Admin/View/Public/top.html" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2><if condition="!empty($list['id'])">编辑<else/>添加</if></h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Car/addProcess')}" method="post" id="form1">
+	<input type="hidden" name="id" value="{$list.id}">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">选择分类</td>
+			<td>
+				<select name="sortid" id="sortid">
+					<option value="0">选择分类</option>
+					<foreach name="sort" item="vo">
+						<option value="{$vo.id}" <if condition="$list['sortid'] eq $vo['id']">selected</if>>{$vo.name}</option>
+					</foreach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">名称</td>
+			<td>
+				<input type="text" value="{$list.name}" name="name" id="name">
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">价格</td>
+			<td>
+				<input type="text" value="{$list.price}" name="price" id="price">
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">地址</td>
+			<td>
+				<input type="text" value="{$list.address}" name="address" id="address">
+			</td>
+		</tr>
+			<td colspan='2'>
+				<button type="button" onclick="checkPassword();" >提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+	<script type="text/javascript" src="__TMPL__/assets/js/jquery-1.8.1.min.js"></script>
+	<script>
+		function checkPassword () {
+			var name = $("#name").val();
+			var sortid = $("#sortid").val();
+			var price = $("#price").val();
+			var address = $("#address").val();
+			if(!name){
+				alert("名称不能为空!");
+				return false;
+			}
+			if(!address){
+				alert("地址不能为空!");
+				return false;
+			}
+			if(sortid == 0){
+				alert("分类不能为空!");
+				return false;
+			}
+			if(price == ''){
+				alert("价钱不能为空!");
+				return false;
+			}
+			if(isNaN(price)){
+				alert("价钱请填写数字!");
+				return false;
+			}
+			$("#form1").submit();
+		}
+	</script>
+</body>
+</html>

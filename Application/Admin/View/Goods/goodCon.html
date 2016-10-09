@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<include file="./Application/Admin/View/Public/top.html" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>{$goods.name}</h2>
+		</div>
+	</div>
+	<br/>
+
+	<table class="table table-bordered table-hover definewidth m10">
+		<thead>
+			<tr>
+				
+				<th colspan="3" style="border:none;border-right:1px solid #ccc;width:600px;">拍品图片</th>
+									
+			</tr>
+			<tr>
+				<foreach name="images" item="vo">
+					<td  colspan="3" style="border:none;border-right:1px solid #ccc;width:20%;float:left;height:100%;overflow: hidden;">
+						<img src="__ROOT__/{$vo.img}" style="width: 100%;">
+						
+					</td>
+					
+				</foreach>
+			</tr>
+			
+		</thead>
+	</table>
+		<table class="table table-bordered table-hover definewidth m10">
+			<!-- <tr> <th colspan="2" style="background-color:#8EE5EE;font-size:16px;text-align:center;color:#EE7600;">订单信息</th> </tr> -->
+			<tr>
+				
+				<th colspan="4" style="border:none;border-right:1px solid #ccc;width:600px;">拍品竞拍明细</th>
+									
+			</tr>
+			<tr>
+				<th>竞拍用户</th>
+				<th>竞拍价格</th>
+				<th>竞拍时间</th>		
+			</tr>
+			<foreach name="bid" item="vo">
+				<tr>	
+					<td>{$vo.username}</td>
+					<td>{$vo.price}</td>
+					<td>{$vo.time}</td>
+				</tr>
+			</foreach>
+		</thead>
+		<tr>
+			<td colspan="12" style="text-align:left;"><a href="javascript :;"onClick="javascript :history.back(-1);"><button type="button" class="btn btn-info">返回列表</button></a></td>
+		</tr>
+	</table>
+</form>
+<script type="text/javascript">
+//全选
+function chAll(){
+	var len = document.getElementsByTagName('input').length;
+	for(var i=0; i < len; i++){
+		document.getElementsByTagName('input')[i].checked = true;
+	}
+}
+//全不选
+function unchAll(){
+	var len = document.getElementsByTagName('input').length;
+	for(var i=0; i < len; i++){
+	  	document.getElementsByTagName('input')[i].checked = false;
+	}
+}
+//反选
+function uncheak(){
+	var len = document.getElementsByTagName('input').length;
+	for(var i=0; i < len; i++){
+		if(document.getElementsByTagName('input')[i].checked == false){
+			document.getElementsByTagName('input')[i].checked = true;
+		}else{
+			document.getElementsByTagName('input')[i].checked = false;
+		}
+	}
+}
+</script>
+</body>
+</html>

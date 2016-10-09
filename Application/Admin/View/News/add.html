@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<include file="./Application/Admin/View/Public/top.html" />
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<!-- 文本编辑器 -->
+	<load href="__PUBLIC__/ueditor/ueditor.config.js" />
+	<load href="__PUBLIC__/ueditor/ueditor.all.min.js" />
+	<script type="text/javascript"  src="__PUBLIC__/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="__TMPL__/js/jquery.wallform.js"></script>
+	<load href="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js" />
+	<!-- 文本编辑器 end -->
+    <script type="text/javascript" language="javascript">
+        $(function() {
+            $('#fileUp').change(function() {
+            
+                //$('#uploadLog2').html('开始上传中....');
+				document.formname.action="{:U('Admin/Goods/uploadProcess')}";
+                $('#formFile').submit();
+				document.formname.action= "";
+            });
+        });
+        function stopSend(){
+			var goodid = $('#goodsid').val();
+			$("#image").load("{:U('Admin/Goods/images')}?good_id="+goodid);
+		}
+    </script>
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>添加小区公告</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/News/addProcess')}"  method="post" id="form1" name="formname" >
+	<input type="hidden" name="villageid" value="{$villageId}">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">标题</td>
+			<td><input type="text" name="title" id="title" value="{$list.title}"></td>
+		</tr>
+		<tr>
+			<td>
+				公告内容
+			</td>
+			<td>
+				<script type="text/plain" id="content" name="content"></script>
+					<script type="text/javascript">
+						$(function() {
+							var editor;
+							//具体参数配置在  editor_config.js  中
+							var options = {
+								initialFrameWidth : 900, //初化宽度
+								initialFrameHeight : 200, //初化高度
+								focus : false, //初始化时，是否让编辑器获得焦点true或false
+								maximumWords : 100000, //允许的最大字符数
+							};
+							editor = new UE.ui.Editor(options);
+							editor.render("content");
+							editor.ready(function() {
+							editor.setContent('{$list.content}'); //加载数据库Action.class.PHP传过来的值
+							});
+						});
+					</script>
+			</td>
+			
+		</tr>
+		
+		
+		<tr>
+			<td colspan='2'>
+				<input type="button" onclick="keep();"  value="保存" >
+			</td>	
+		</tr>
+	</table>
+	</form>
+<script>
+
+function keep(){
+	var title=document.getElementById('title').value;
+	if(title == ''){
+		alert('标题不能为空!');
+		return false;
+	}
+	$("#form1").submit();
+	
+}
+</script>
+</body>
+</html>

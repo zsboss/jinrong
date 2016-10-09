@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<include file="./Application/Admin/View/Public/top.html" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>消费统计</h2>
+		</div>
+	</div>
+	<form action="__URL__/income" method="GET">
+		<input type="text" placeholder="开始时间"
+			style="height: 30px; width: 160px; margin-top: 10px;"
+			name="strate_time" id="strate_time" value="{$manp['strate_time']}" />
+		<input type="text" placeholder="结束时间"
+			style="height: 30px; width: 160px; margin-top: 10px;" name="end_time"
+			id="end_time" value="{$manp['end_time']}" />
+		<input type="submit" value="搜   索" class="btn btn-success" id="find" />
+
+	</form>
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<th>订单状态</th>
+			<th>订单数</th>
+			<th>支付金额(元)</th>
+		</tr>
+		<tr>
+			<td>全部订单</td>
+			<td><if condition="empty($total['number'])">0<else/>{$total.number}</if></td>
+			<td><if condition="empty($total['price'])">0<else/>{$total.price}</if></td>
+		</tr>
+		<tr>
+			<td>异常订单</td>
+			<td><if condition="empty($error_total['number'])">0<else/>{$error_total.number}</if></td>
+			<td><if condition="empty($error_total['price'])">0<else/>{$error_total.price}</if></td>
+		</tr>
+		<tr>
+			<td>正常订单</td>
+			<td><if condition="empty($good['number'])">0<else/>{$good_total.number}</if></td>
+			<td><if condition="empty($good['price'])">0<else/>{$good_total.price}</if></td>
+		</tr>
+	</table>
+	<div style="margin-left: 540px; margin-top: 10px; margin-bottom: 10px;">{$page}</div>
+	<script>
+		//日期控件
+		$('#strate_time').bind('click', function() {
+			WdatePicker();
+		});
+		$('#end_time').bind('click', function() {
+			WdatePicker();
+		});
+
+		$('#find').click(function() {
+			var strate_time = $("#strate_time").val();
+			var end_time = $("#end_time").val();
+			if (strate_time && end_time) {
+				if (strate_time >= end_time) {
+					alert("结束时间不能小于开始时间  ");
+					return false;
+				}
+			}
+
+		});
+	</script>
+</body>
+</html>

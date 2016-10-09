@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<include file="Public:picUpload" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>会员升级</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/Vip/vipProcess')}" method="post" id="form1">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td colspan=2>{$vip_one.vname}会员升级{$vip_two.vname}会员条件</td>
+		</tr>
+		<tr>
+			<td>一个月内推广<input type="text" name="one" value="{$list.one}" id="one">个{$vip_two.vname}会员</td>
+		</tr>
+		<tr>
+			<td>一个月内推广<input type="text" name="two" value="{$list.two}" id="two">个{$vip_one.vname}会员</td>
+		</tr>
+		<tr>
+			<td>累计推广<input type="text" name="three" value="{$list.three}" id="three">个{$vip_two.vname}会员</td>
+		</tr>
+		<tr>
+			<td>累计推广<input type="text" name="four" value="{$list.four}" id="one2">个{$vip_one.vname}会员</td>
+		</tr>
+		<tr>
+			<td colspan='1'>
+				<input type="hidden" name="id" value="{$list.id}">
+				<button type="button" onclick="checkPassword();">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+	<script type="text/javascript" src="__TMPL__/assets/js/jquery-1.8.1.min.js"></script>
+	<script>
+		function checkPassword () {
+			$("#form1").submit();
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<include file="Public:picUpload" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>分销佣金</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/System/indexProcess')}" method="post" id="form1">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td colspan=2>代理商</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">返给上级红包</td>
+			<td><input type="text" name="dai_money" value="{$list.dai_money}" id="one">（元）</td>
+		</tr>
+		<tr>
+			<td colspan=2>VIP会员</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">一级分销</td>
+			<td><input type="text" name="one" value="{$list.one}" id="one">（%）</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">二级分销</td>
+			<td><input type="text" name="two" value="{$list.two}" id="two">（%）</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">三级分销</td>
+			<td><input type="text" name="three" value="{$list.three}" id="three">（%）</td>
+		</tr>
+		<tr>
+			<td colspan=2>白金会员</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">一级分销</td>
+			<td><input type="text" name="one2" value="{$list.one2}" id="one2">（%）</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">二级分销</td>
+			<td><input type="text" name="two2" value="{$list.two2}" id="two2">（%）</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">三级分销</td>
+			<td><input type="text" name="three2" value="{$list.three2}" id="three2">（%）</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<button type="button" onclick="checkPassword();">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+	<script type="text/javascript" src="__TMPL__/assets/js/jquery-1.8.1.min.js"></script>
+	<script>
+		function checkPassword () {
+			var one = $("#one").val();
+			var two = $("#two").val();
+			var three = $("#three").val();
+			var one2 = $("#one2").val();
+			var two2 = $("#two2").val();
+			var three2 = $("#three2").val();
+			if(!one || !two || !three || !one2 || !two2 || !three2){
+				alert("值不能为空!");
+				return false;
+			}
+			$("#form1").submit();
+			
+		}
+	</script>
+</body>
+</html>

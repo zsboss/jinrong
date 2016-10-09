@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+	<link href="__TMPL__/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+	<link href="__TMPL__/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+	
+<style type="text/css">
+body {
+	padding-bottom: 40px;
+	padding: 10px 20px 20px 10px;
+}
+</style>
+<include file="Public:picUpload" />
+</head>
+<body>
+	<div class="tips tips-large tips-success">
+		<span class="x-icon x-icon-success">
+			<i class="icon icon-ok icon-white"></i>
+		</span>
+		<div class="tips-content">
+			<h2>编辑内容</h2>
+		</div>
+	</div>
+	<br/>
+	<form action="{:U('Admin/WxAppConfig/process')}" method="post">
+	<input type="hidden" name="id" value="{$list.id}">
+	<table class="table table-bordered table-hover definewidth m10">
+		<tr>
+			<td style="width:15%;">appid</td>
+			<td><input type="text" name="appid" value="{$list.appid}"></td>
+		</tr>
+		<tr>
+			<td style="width:15%;">appsecret</td>
+			<td>
+				<input type="text" name="appsecret" value="{$list.appsecret}">
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">token</td>
+			<td>
+				<input type="text" name="token" value="{$list.token}">
+			</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">微信模式</td>
+			<td>
+				<select name="isvalid">
+					<option value="1" <if condition="$list['isvalid'] == '1'">selected</if>>验证模式</option>
+					<option value="2" <if condition="$list['isvalid'] == '2'">selected</if>>正常模式</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<button type="submit">提交</button>
+			</td>	
+		</tr>
+	</table>
+	</form>
+</body>
+</html>
